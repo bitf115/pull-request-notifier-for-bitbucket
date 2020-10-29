@@ -6,10 +6,14 @@ import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.server.ApplicationPropertiesService;
 import com.atlassian.bitbucket.user.ApplicationUser;
 import com.atlassian.bitbucket.user.SecurityService;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.bjurr.prnfb.http.ClientKeyStore;
 import se.bjurr.prnfb.listener.PrnfbPullRequestAction;
 import se.bjurr.prnfb.settings.PrnfbNotification;
 
+@BitbucketComponent
 public class PrnfbRendererFactory {
 
   private final AuthenticationContext authenticationContext;
@@ -17,11 +21,12 @@ public class PrnfbRendererFactory {
   private final RepositoryService repositoryService;
   private final SecurityService securityService;
 
+  @Autowired
   public PrnfbRendererFactory(
       RepositoryService repositoryService,
-      ApplicationPropertiesService propertiesService,
-      AuthenticationContext authenticationContext,
-      SecurityService securityService) {
+      @ComponentImport final ApplicationPropertiesService propertiesService,
+      @ComponentImport final AuthenticationContext authenticationContext,
+      @ComponentImport final SecurityService securityService) {
     this.repositoryService = repositoryService;
     this.propertiesService = propertiesService;
     this.authenticationContext = authenticationContext;

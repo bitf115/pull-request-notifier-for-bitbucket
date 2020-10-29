@@ -10,9 +10,7 @@ import static javax.xml.bind.DatatypeConverter.printBase64Binary;
 import static org.apache.http.HttpVersion.HTTP_1_0;
 import static org.apache.http.HttpVersion.HTTP_1_1;
 import static org.slf4j.LoggerFactory.getLogger;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.GET;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.POST;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.PUT;
+import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.*;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
@@ -26,7 +24,6 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpVersion;
 import org.apache.http.ProtocolVersion;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -95,7 +92,7 @@ public class UrlInvoker {
   private boolean shouldAcceptAnyCertificate;
 
   private String urlParam;
-  private ProtocolVersion httpVersion = HttpVersion.HTTP_1_0;
+  private ProtocolVersion httpVersion = HTTP_1_0;
 
   UrlInvoker() {}
 

@@ -3,15 +3,16 @@ package se.bjurr.prnfb.presentation.dto;
 import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /** @see ButtonFormElementDTO */
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class ButtonFormElementOptionDTO {
-  private String label;
-  private String name;
-  private Boolean defaultValue;
+  @XmlElement private String label;
+  @XmlElement private String name;
+  @XmlElement private Boolean defaultValue;
 
   public void setDefaultValue(Boolean defaultValue) {
     this.defaultValue = defaultValue;

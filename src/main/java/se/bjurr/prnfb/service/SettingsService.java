@@ -15,6 +15,8 @@ import static se.bjurr.prnfb.settings.PrnfbSettingsDataBuilder.prnfbSettingsData
 
 import com.atlassian.bitbucket.user.SecurityService;
 import com.atlassian.bitbucket.util.Operation;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.pluginsettings.PluginSettings;
 import com.atlassian.sal.api.pluginsettings.PluginSettingsFactory;
 import com.atlassian.sal.api.transaction.TransactionCallback;
@@ -27,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.bjurr.prnfb.settings.HasUuid;
 import se.bjurr.prnfb.settings.PrnfbButton;
 import se.bjurr.prnfb.settings.PrnfbNotification;
@@ -35,6 +38,7 @@ import se.bjurr.prnfb.settings.PrnfbSettingsData;
 import se.bjurr.prnfb.settings.USER_LEVEL;
 import se.bjurr.prnfb.settings.ValidationException;
 
+@BitbucketComponent
 public class SettingsService {
 
   public static final String STORAGE_KEY = "se.bjurr.prnfb.pull-request-notifier-for-bitbucket-3";
@@ -44,10 +48,11 @@ public class SettingsService {
   private final SecurityService securityService;
   private final TransactionTemplate transactionTemplate;
 
+  @Autowired
   public SettingsService(
-      PluginSettingsFactory pluginSettingsFactory,
-      TransactionTemplate transactionTemplate,
-      SecurityService securityService) {
+      @ComponentImport final PluginSettingsFactory pluginSettingsFactory,
+      @ComponentImport final TransactionTemplate transactionTemplate,
+      @ComponentImport final SecurityService securityService) {
     this.pluginSettings = pluginSettingsFactory.createGlobalSettings();
     this.transactionTemplate = transactionTemplate;
     this.securityService = securityService;

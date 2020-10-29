@@ -16,6 +16,8 @@ import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.bitbucket.user.SecurityService;
 import com.atlassian.bitbucket.util.Operation;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.user.UserKey;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
@@ -23,9 +25,11 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import javax.annotation.Nullable;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.bjurr.prnfb.settings.Restricted;
 import se.bjurr.prnfb.settings.USER_LEVEL;
 
+@BitbucketComponent
 public class UserCheckService {
   private static final Logger LOG = getLogger(UserCheckService.class);
   private final PermissionService permissionService;
@@ -35,12 +39,13 @@ public class UserCheckService {
   private final SettingsService settingsService;
   private final UserManager userManager;
 
+  @Autowired
   public UserCheckService(
-      PermissionService permissionService,
-      UserManager userManager,
+      @ComponentImport final PermissionService permissionService,
+      @ComponentImport final UserManager userManager,
       SettingsService settingsService,
       RepositoryService repositoryService,
-      ProjectService projectService,
+      @ComponentImport final ProjectService projectService,
       SecurityService securityService) {
     this.userManager = userManager;
     this.settingsService = settingsService;
@@ -50,15 +55,15 @@ public class UserCheckService {
     this.securityService = securityService;
   }
 
-  public <R extends Restricted> Iterable<R> filterAllowed(USER_LEVEL adminRestriction, List<R> r) {
-    return filter(
-        r,
-        (c) ->
-            isAllowed( //
-                adminRestriction, //
-                c.getProjectKey().orNull(), //
-                c.getRepositorySlug().orNull()));
-  }
+//  public <R extends Restricted> Iterable<R> filterAllowed(USER_LEVEL adminRestriction, List<R> r) {
+//    return filter(
+//        r,
+//        (c) ->
+//            isAllowed( //
+//                adminRestriction, //
+//                c.getProjectKey().orNull(), //
+//                c.getRepositorySlug().orNull()));
+//  }
 
   public <R extends Restricted> Iterable<R> filterAdminAllowed(List<R> list) {
     final USER_LEVEL adminRestriction =

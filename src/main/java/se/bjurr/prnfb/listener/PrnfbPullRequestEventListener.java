@@ -37,6 +37,8 @@ import com.atlassian.bitbucket.scm.pull.ScmPullRequestCommandFactory;
 import com.atlassian.bitbucket.user.SecurityService;
 import com.atlassian.bitbucket.util.Operation;
 import com.atlassian.event.api.EventListener;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import java.util.concurrent.ExecutorService;
@@ -57,6 +59,7 @@ import se.bjurr.prnfb.settings.PrnfbNotification;
 import se.bjurr.prnfb.settings.PrnfbSettingsData;
 import se.bjurr.prnfb.settings.TRIGGER_IF_MERGE;
 
+@BitbucketComponent
 public class PrnfbPullRequestEventListener {
 
   private static final Logger LOG = getLogger(PrnfbPullRequestEventListener.class);
@@ -77,11 +80,11 @@ public class PrnfbPullRequestEventListener {
 
   public PrnfbPullRequestEventListener(
       final PrnfbRendererFactory prnfbRendererFactory,
-      final PullRequestService pullRequestService,
-      final ExecutorService executorService,
+      @ComponentImport final PullRequestService pullRequestService,
+      @ComponentImport final ExecutorService executorService,
       final SettingsService settingsService,
-      final SecurityService securityService,
-      final ScmService scmService) {
+      @ComponentImport final SecurityService securityService,
+      @ComponentImport final ScmService scmService) {
     this.prnfbRendererFactory = prnfbRendererFactory;
     this.pullRequestService = pullRequestService;
     this.executorService = executorService;

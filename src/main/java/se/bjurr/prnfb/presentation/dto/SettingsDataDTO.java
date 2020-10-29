@@ -3,6 +3,7 @@ package se.bjurr.prnfb.presentation.dto;
 import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.bjurr.prnfb.settings.USER_LEVEL;
 
@@ -10,11 +11,11 @@ import se.bjurr.prnfb.settings.USER_LEVEL;
 @XmlAccessorType(FIELD)
 public class SettingsDataDTO {
 
-  private USER_LEVEL adminRestriction;
-  private String keyStore;
-  private String keyStorePassword;
-  private String keyStoreType;
-  private boolean shouldAcceptAnyCertificate;
+  @XmlElement private USER_LEVEL adminRestriction;
+  @XmlElement private String keyStore;
+  @XmlElement private String keyStorePassword;
+  @XmlElement private String keyStoreType;
+  @XmlElement private boolean shouldAcceptAnyCertificate;
 
   @Override
   public boolean equals(Object obj) {

@@ -4,7 +4,7 @@
  <modelVersion>4.0.0</modelVersion>
  <groupId>se.bjurr.prnfb</groupId>
  <artifactId>pull-request-notifier-for-bitbucket</artifactId>
- <version>4.2-SNAPSHOT</version>
+ <version>4.2-SNAPSHOT-IM</version>
  <organization>
   <name>Tomas Bjerre AB</name>
   <url>https://tomasbjerreab.se/</url>
@@ -82,7 +82,6 @@
   <dependency>
    <groupId>javax.ws.rs</groupId>
    <artifactId>jsr311-api</artifactId>
-   <version>1.1.1</version>
    <scope>provided</scope>
   </dependency>
   <dependency>
@@ -146,6 +145,22 @@
    <artifactId>jaxws-api</artifactId>
    <scope>test</scope>
   </dependency>
+  <dependency>
+   <groupId>com.atlassian.plugin</groupId>
+   <artifactId>atlassian-spring-scanner-annotation</artifactId>
+   <scope>provided</scope>
+  </dependency>
+  <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context</artifactId>
+   <version>${spring.version}</version>
+   <scope>provided</scope>
+  </dependency>
+  <dependency>
+   <groupId>com.atlassian.plugins</groupId>
+   <artifactId>atlassian-plugins-webresource-api</artifactId>
+   <scope>provided</scope>
+  </dependency>
  </dependencies>
  <build>
   <plugins>
@@ -204,15 +219,32 @@ Changelog of Pull Request Notifier for Bitbucket.
     <version>${amps.version}</version>
     <extensions>true</extensions>
     <configuration>
+     <instructions>
+      <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+      <!-- Add package to export here -->
+      <Export-Package>
+       com.sun.activation.registries
+      </Export-Package>
+      <!-- Add package import here -->
+      <Import-Package>
+       com.sun.*, org.springframework.osgi.*;resolution:="optional", org.eclipse.gemini.blueprint.*;resolution:="optional", *
+      </Import-Package>
+      <!-- Ensure plugin is Spring powered -->
+      <Spring-Context>
+       *
+      </Spring-Context>
+
+      <Atlassian-Scan-Folders>META-INF/plugin-descriptors</Atlassian-Scan-Folders>
+     </instructions>
      <compressJs>false</compressJs>
      <compressCss>false</compressCss>
      <quickReloadVersion>${quick.reload.version}</quickReloadVersion>
      <enableDevToolbox>false</enableDevToolbox>
      <enablePde>false</enablePde>
-     <skipRestDocGeneration>true</skipRestDocGeneration>
-     <skipManifestValidation>true</skipManifestValidation>
-     <extractDependencies>false</extractDependencies>
-     <skipManifestValidation>true</skipManifestValidation>
+     <!--     <skipRestDocGeneration>true</skipRestDocGeneration>-->
+     <!--     <skipManifestValidation>true</skipManifestValidation>-->
+     <!--     <extractDependencies>false</extractDependencies>-->
+     <!--     <skipManifestValidation>true</skipManifestValidation>-->
      <enableQuickReload>true</enableQuickReload>
      <pluginArtifacts>
       <pluginArtifact>
@@ -229,6 +261,28 @@ Changelog of Pull Request Notifier for Bitbucket.
        <dataVersion>${bitbucket.data.version}</dataVersion>
       </product>
      </products>
+    </configuration>
+   </plugin>
+   <plugin>
+    <groupId>com.atlassian.plugin</groupId>
+    <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+    <version>${atlassian.spring.scanner.version}</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>atlassian-spring-scanner</goal>
+      </goals>
+      <phase>process-classes</phase>
+     </execution>
+    </executions>
+    <configuration>
+     <scannedDependencies>
+      <dependency>
+       <groupId>com.atlassian.plugin</groupId>
+       <artifactId>atlassian-spring-scanner-external-jar</artifactId>
+      </dependency>
+     </scannedDependencies>
+     <verbose>false</verbose>
     </configuration>
    </plugin>
    <plugin>
@@ -347,5 +401,8 @@ Changelog of Pull Request Notifier for Bitbucket.
   <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
   <amps.version>8.1.1</amps.version>
   <quick.reload.version>3.0.0</quick.reload.version>
+  <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+  <atlassian.spring.scanner.version>2.1.15</atlassian.spring.scanner.version>
+  <spring.version>5.2.6.RELEASE</spring.version>
  </properties>
 </project>

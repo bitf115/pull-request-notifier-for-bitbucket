@@ -2,7 +2,6 @@ package se.bjurr.prnfb.presentation;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Throwables.propagate;
 import static com.google.common.collect.ImmutableMap.of;
 import static com.google.common.collect.Maps.newHashMap;
 
@@ -10,19 +9,25 @@ import com.atlassian.bitbucket.project.Project;
 import com.atlassian.bitbucket.project.ProjectService;
 import com.atlassian.bitbucket.repository.Repository;
 import com.atlassian.bitbucket.repository.RepositoryService;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.sal.api.user.UserProfile;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import com.atlassian.webresource.api.assembler.PageBuilderService;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import com.google.common.base.Throwables;
 import java.net.URI;
 import java.util.Map;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.bjurr.prnfb.service.UserCheckService;
 
+@BitbucketComponent
 public class GlobalAdminServlet extends HttpServlet {
   private static final long serialVersionUID = 3846987953228399693L;
   private final LoginUriProvider loginUriProvider;
@@ -31,18 +36,22 @@ public class GlobalAdminServlet extends HttpServlet {
   private final ProjectService projectService;
   private final UserCheckService userCheckService;
   private final UserManager userManager;
+  private final PageBuilderService pageBuilderService;
 
+  @Autowired
   public GlobalAdminServlet(
-      UserManager userManager,
-      LoginUriProvider loginUriProvider,
-      TemplateRenderer renderer,
-      RepositoryService repositoryService,
+      @ComponentImport final UserManager userManager,
+      @ComponentImport final LoginUriProvider loginUriProvider,
+      @ComponentImport final TemplateRenderer renderer,
+      @ComponentImport final RepositoryService repositoryService,
+      @ComponentImport final PageBuilderService pageBuilderService,
       UserCheckService userCheckService,
       ProjectService projectService) {
     this.userManager = userManager;
     this.loginUriProvider = loginUriProvider;
     this.renderer = renderer;
     this.repositoryService = repositoryService;
+    this.pageBuilderService = pageBuilderService;
     this.userCheckService = userCheckService;
     this.projectService = projectService;
   }
@@ -102,12 +111,16 @@ public class GlobalAdminServlet extends HttpServlet {
       }
 
       response.setContentType("text/html;charset=UTF-8");
+      pageBuilderService
+          .assembler()
+          .resources()
+          .requireWebResource("se.bjurr.prnfb.pull-request-notifier-for-bitbucket:resources");
       this.renderer.render( //
           "admin.vm", //
           context, //
           response.getWriter());
     } catch (Exception e) {
-      propagate(e);
+      Throwables.throwIfUnchecked(e);
     }
   }
 
@@ -122,7 +135,7 @@ public class GlobalAdminServlet extends HttpServlet {
 
   @VisibleForTesting
   Optional<Project> getProject(String pathInfo) {
-    Optional<String[]> componentsOpt = getComponents(pathInfo);
+    java.util.Optional<String[]> componentsOpt = getComponents(pathInfo);
     if (!componentsOpt.isPresent() || componentsOpt.get().length != 1) {
       return absent();
     }
@@ -134,7 +147,7 @@ public class GlobalAdminServlet extends HttpServlet {
 
   @VisibleForTesting
   Optional<Repository> getRepository(String pathInfo) {
-    Optional<String[]> componentsOpt = getComponents(pathInfo);
+    java.util.Optional<String[]> componentsOpt = getComponents(pathInfo);
     if (!componentsOpt.isPresent() || componentsOpt.get().length != 2) {
       return absent();
     }
@@ -148,19 +161,19 @@ public class GlobalAdminServlet extends HttpServlet {
     return Optional.of(repository);
   }
 
-  private Optional<String[]> getComponents(String pathInfo) {
+  private java.util.Optional<String[]> getComponents(String pathInfo) {
     if (pathInfo == null || pathInfo.isEmpty()) {
-      return absent();
+      return java.util.Optional.empty();
     }
     int indexOf = pathInfo.indexOf("prnfb/admin/");
     if (indexOf == -1) {
-      return absent();
+      return java.util.Optional.empty();
     }
     String root = pathInfo.substring(indexOf + "prnfb/admin/".length());
     if (root.isEmpty()) {
-      return absent();
+      return java.util.Optional.empty();
     }
     String[] split = root.split("/");
-    return Optional.of(split);
+    return java.util.Optional.of(split);
   }
 }

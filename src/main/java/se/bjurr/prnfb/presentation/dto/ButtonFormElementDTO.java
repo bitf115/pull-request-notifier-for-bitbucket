@@ -4,18 +4,19 @@ import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class ButtonFormElementDTO {
-  private String defaultValue;
-  private String description;
-  private String label;
-  private String name;
-  private List<ButtonFormElementOptionDTO> buttonFormElementOptionList;
-  private boolean required;
-  private ButtonFormType type;
+  @XmlElement private String defaultValue;
+  @XmlElement private String description;
+  @XmlElement private String label;
+  @XmlElement private String name;
+  @XmlElement private List<ButtonFormElementOptionDTO> buttonFormElementOptionList;
+  @XmlElement private boolean required;
+  @XmlElement private ButtonFormType type;
 
   @Override
   public boolean equals(Object obj) {

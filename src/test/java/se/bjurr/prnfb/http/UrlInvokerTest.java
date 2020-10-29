@@ -4,14 +4,10 @@ import static com.google.common.base.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.DELETE;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.GET;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.POST;
-import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.PUT;
+import static se.bjurr.prnfb.http.UrlInvoker.HTTP_METHOD.*;
 import static se.bjurr.prnfb.listener.PrnfbPullRequestAction.APPROVED;
 import static se.bjurr.prnfb.settings.PrnfbNotificationBuilder.prnfbNotificationBuilder;
 
-import com.google.common.base.Optional;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -100,7 +96,7 @@ public class UrlInvokerTest {
     final HttpRequestBase response =
         this.urlInvoker //
             .withMethod(PUT) //
-            .withPostContent(Optional.of("some content")) //
+            .withPostContent(of("some content")) //
             .newHttpRequestBase();
 
     assertThat(response.getMethod()) //
@@ -183,7 +179,7 @@ public class UrlInvokerTest {
     final HttpClientBuilder mockedBuilder = mock(HttpClientBuilder.class);
     final ClientKeyStore clientKeyStore = mock(ClientKeyStore.class);
 
-    when(clientKeyStore.getKeyStore()).thenReturn(Optional.absent());
+    when(clientKeyStore.getKeyStore()).thenReturn(java.util.Optional.empty());
 
     this.urlInvoker //
         .withUrlParam("https://url.com/") //
