@@ -55,15 +55,6 @@ public class UserCheckService {
     this.securityService = securityService;
   }
 
-//  public <R extends Restricted> Iterable<R> filterAllowed(USER_LEVEL adminRestriction, List<R> r) {
-//    return filter(
-//        r,
-//        (c) ->
-//            isAllowed( //
-//                adminRestriction, //
-//                c.getProjectKey().orNull(), //
-//                c.getRepositorySlug().orNull()));
-//  }
 
   public <R extends Restricted> Iterable<R> filterAdminAllowed(List<R> list) {
     final USER_LEVEL adminRestriction =

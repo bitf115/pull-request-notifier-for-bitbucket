@@ -4,7 +4,7 @@
  <modelVersion>4.0.0</modelVersion>
  <groupId>se.bjurr.prnfb</groupId>
  <artifactId>pull-request-notifier-for-bitbucket</artifactId>
- <version>4.2-SNAPSHOT-IM</version>
+ <version>4.3.0</version>
  <organization>
   <name>Tomas Bjerre AB</name>
   <url>https://tomasbjerreab.se/</url>
@@ -365,6 +365,67 @@ Changelog of Pull Request Notifier for Bitbucket.
      </execution>
     </executions>
    </plugin>
+   <plugin>
+    <!-- Install front-end modules and run ESLint -->
+    <groupId>com.github.eirslett</groupId>
+    <artifactId>frontend-maven-plugin</artifactId>
+    <version>${frontend.maven.plugin.version}</version>
+    <configuration>
+     <nodeVersion>${nodeVersion}</nodeVersion>
+     <installDirectory>${frontend.maven.plugin.install.directory}</installDirectory>
+     <workingDirectory>${basedir}</workingDirectory>
+    </configuration>
+    <executions>
+     <execution>
+      <id>install-node-and-npm</id>
+      <phase>generate-resources</phase>
+      <goals>
+       <goal>install-node-and-npm</goal>
+      </goals>
+     </execution>
+     <execution>
+      <id>install-prod-dependencies</id>
+      <phase>generate-resources</phase>
+      <goals>
+       <goal>npm</goal>
+      </goals>
+      <configuration>
+       <arguments>${fe.cmd.install}</arguments>
+      </configuration>
+     </execution>
+     <execution>
+      <id>compile-the-ui</id>
+      <phase>process-resources</phase>
+      <goals>
+       <goal>npm</goal>
+      </goals>
+      <configuration>
+       <arguments>run ${fe.cmd.build}</arguments>
+      </configuration>
+     </execution>
+     <!--                    <execution>-->
+     <!--                        <id>lint</id>-->
+     <!--                        <phase>test</phase>-->
+     <!--                        <goals>-->
+     <!--                            <goal>npm</goal>-->
+     <!--                        </goals>-->
+     <!--                        <configuration>-->
+     <!--                            <arguments>run lint</arguments>-->
+     <!--                        </configuration>-->
+     <!--                    </execution>-->
+     <!--                    <execution>-->
+     <!--                        <id>run-tests</id>-->
+     <!--                        <phase>test</phase>-->
+     <!--                        <goals>-->
+     <!--                            <goal>npm</goal>-->
+     <!--                        </goals>-->
+     <!--                        <configuration>-->
+     <!--                            <arguments>run test</arguments>-->
+     <!--                        </configuration>-->
+     <!--                    </execution>-->
+    </executions>
+   </plugin>
+
   </plugins>
   <resources>
    <resource>
@@ -391,18 +452,31 @@ Changelog of Pull Request Notifier for Bitbucket.
     </plugins>
    </build>
   </profile>
+  <profile>
+   <id>watch-mode</id>
+   <properties>
+    <fe.cmd.build>${fe.cmd.build.dev}</fe.cmd.build>
+   </properties>
+  </profile>
  </profiles>
 
  <properties>
   <changelog.version>1.60</changelog.version>
   <fmt.version>2.9</fmt.version>
   <violations.version>1.21</violations.version>
-  <bitbucket.version>7.6.0</bitbucket.version>
+  <bitbucket.version>7.6.1</bitbucket.version>
   <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
   <amps.version>8.1.1</amps.version>
   <quick.reload.version>3.0.0</quick.reload.version>
   <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
   <atlassian.spring.scanner.version>2.1.15</atlassian.spring.scanner.version>
   <spring.version>5.2.6.RELEASE</spring.version>
+  <frontend.maven.plugin.version>1.6</frontend.maven.plugin.version>
+  <frontend.maven.plugin.install.directory>${project.build.directory}</frontend.maven.plugin.install.directory>
+  <nodeVersion>v12.13.0</nodeVersion>
+  <fe.cmd.install>install --no-progress</fe.cmd.install>
+  <fe.cmd.build>build:prod</fe.cmd.build>
+  <fe.cmd.build.dev>build:dev</fe.cmd.build.dev>
+  <frontend.working.directory>src/main/js/pull-request-notifier-for-bitbucket</frontend.working.directory>
  </properties>
 </project>

@@ -12,7 +12,7 @@ define('plugin/prnfb/admin', [
 
  const buttonsAdminUrlPostUrl = contextPath() + "/rest/prnfb-admin/1.0/settings/buttons";
  let buttonsAdminUrl = buttonsAdminUrlPostUrl;
- alert("Admin JS " + contextPath())
+
  let projectKey;
  if ($('#prnfbRepositorySlug').length !== 0) {
   projectKey = $('#prnfbProjectKey').val();
