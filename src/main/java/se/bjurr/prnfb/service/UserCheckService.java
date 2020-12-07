@@ -164,9 +164,6 @@ public class UserCheckService {
 
   public boolean isViewAllowed() {
     final UserProfile user = userManager.getRemoteUser();
-    if (user == null) {
-      return false;
-    }
-    return true;
+    return user != null;
   }
 }

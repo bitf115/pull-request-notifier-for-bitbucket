@@ -146,12 +146,8 @@ public class ButtonsService {
             .setButton(button) //
             .build();
 
-    PrnfbPullRequestAction pullRequestAction = BUTTON_TRIGGER;
-
-    PrnfbRendererWrapper renderer =
-        prnfbRendererFactory.create(
-            pullRequest, pullRequestAction, variables, clientKeyStore, shouldAcceptAnyCertificate);
-    return renderer;
+    return prnfbRendererFactory.create(
+        pullRequest, BUTTON_TRIGGER, variables, clientKeyStore, shouldAcceptAnyCertificate);
   }
 
   public List<NotificationResponse> handlePressed(
@@ -191,10 +187,8 @@ public class ButtonsService {
    * Checks if the given button is visible on the pull request by either the from or to repository.
    */
   private boolean isVisibleOnPullRequest(PrnfbButton button, PullRequest pullRequest) {
-    return pullRequest.getFromRef() != null
-            && isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
-        || pullRequest.getToRef() != null
-            && isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
+    return   isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
+        ||   isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
   }
 
   /**
