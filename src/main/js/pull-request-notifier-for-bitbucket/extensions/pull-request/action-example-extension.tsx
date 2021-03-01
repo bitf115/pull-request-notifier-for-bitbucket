@@ -36,6 +36,7 @@ export default ModalExtension.factory((api: PluginAPI, context: Context<any>) =>
     console.log(context);
     return {
         label: getLabel(0),
+        hidden: true,
         onAction(modalApi) {
             modalApi.setTitle('Pull request notification').setWidth(ModalExtension.Width.large).setAppearance(ModalExtension.Appearance.warning);
 

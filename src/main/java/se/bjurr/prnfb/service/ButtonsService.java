@@ -187,8 +187,8 @@ public class ButtonsService {
    * Checks if the given button is visible on the pull request by either the from or to repository.
    */
   private boolean isVisibleOnPullRequest(PrnfbButton button, PullRequest pullRequest) {
-    return   isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
-        ||   isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
+    return isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
+        || isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
   }
 
   /**

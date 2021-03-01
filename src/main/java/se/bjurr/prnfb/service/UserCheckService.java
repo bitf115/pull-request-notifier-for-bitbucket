@@ -55,7 +55,6 @@ public class UserCheckService {
     this.securityService = securityService;
   }
 
-
   public <R extends Restricted> Iterable<R> filterAdminAllowed(List<R> list) {
     final USER_LEVEL adminRestriction =
         settingsService.getPrnfbSettingsData().getAdminRestriction();
