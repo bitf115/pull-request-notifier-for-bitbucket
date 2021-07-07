@@ -4,19 +4,19 @@ define('plugin/prnfb/admin', [
  'plugin/prnfb/utils',
  'wrm/context-path'
 ], function($, AJS, utils, contextPath) {
- var settingsAdminUrlPostUrl = contextPath + "/rest/prnfb-admin/1.0/settings";
- var settingsAdminUrl = settingsAdminUrlPostUrl;
+ const settingsAdminUrlPostUrl = contextPath() + "/rest/prnfb-admin/1.0/settings";
+ let settingsAdminUrl = settingsAdminUrlPostUrl;
 
- var notificationsAdminUrlPostUrl = contextPath + "/rest/prnfb-admin/1.0/settings/notifications";
- var notificationsAdminUrl = notificationsAdminUrlPostUrl;
+ const notificationsAdminUrlPostUrl = contextPath() + "/rest/prnfb-admin/1.0/settings/notifications";
+ let notificationsAdminUrl = notificationsAdminUrlPostUrl;
 
- var buttonsAdminUrlPostUrl = contextPath + "/rest/prnfb-admin/1.0/settings/buttons";
- var buttonsAdminUrl = buttonsAdminUrlPostUrl;
+ const buttonsAdminUrlPostUrl = contextPath() + "/rest/prnfb-admin/1.0/settings/buttons";
+ let buttonsAdminUrl = buttonsAdminUrlPostUrl;
 
- var projectKey;
+ let projectKey;
  if ($('#prnfbRepositorySlug').length !== 0) {
   projectKey = $('#prnfbProjectKey').val();
-  var repositorySlug = $('#prnfbRepositorySlug').val();
+  const repositorySlug = $('#prnfbRepositorySlug').val();
 
   notificationsAdminUrl = notificationsAdminUrlPostUrl + '/projectKey/' + projectKey + '/repositorySlug/' + repositorySlug;
   buttonsAdminUrl = buttonsAdminUrlPostUrl + '/projectKey/' + projectKey + '/repositorySlug/' + repositorySlug;

@@ -4,7 +4,7 @@
  <modelVersion>4.0.0</modelVersion>
  <groupId>se.bjurr.prnfb</groupId>
  <artifactId>pull-request-notifier-for-bitbucket</artifactId>
- <version>4.2-SNAPSHOT</version>
+ <version>4.3.0</version>
  <organization>
   <name>Tomas Bjerre AB</name>
   <url>https://tomasbjerreab.se/</url>
@@ -82,7 +82,6 @@
   <dependency>
    <groupId>javax.ws.rs</groupId>
    <artifactId>jsr311-api</artifactId>
-   <version>1.1.1</version>
    <scope>provided</scope>
   </dependency>
   <dependency>
@@ -137,6 +136,31 @@
    <version>6.0.2.RELEASE</version>
    <scope>test</scope>
   </dependency>
+  <dependency>
+   <groupId>javax.xml.bind</groupId>
+   <artifactId>jaxb-api</artifactId>
+  </dependency>
+  <dependency>
+   <groupId>javax.xml.ws</groupId>
+   <artifactId>jaxws-api</artifactId>
+   <scope>test</scope>
+  </dependency>
+  <dependency>
+   <groupId>com.atlassian.plugin</groupId>
+   <artifactId>atlassian-spring-scanner-annotation</artifactId>
+   <scope>provided</scope>
+  </dependency>
+  <dependency>
+   <groupId>org.springframework</groupId>
+   <artifactId>spring-context</artifactId>
+   <version>${spring.version}</version>
+   <scope>provided</scope>
+  </dependency>
+  <dependency>
+   <groupId>com.atlassian.plugins</groupId>
+   <artifactId>atlassian-plugins-webresource-api</artifactId>
+   <scope>provided</scope>
+  </dependency>
  </dependencies>
  <build>
   <plugins>
@@ -177,7 +201,7 @@ Changelog of Pull Request Notifier for Bitbucket.
   {{/hasLink}}
   {{#commits}}
   {{{message}}}
-  
+
   [{{hash}}](https://github.com/tomasbjerre/pull-request-notifier-for-bitbucket/commit/{{hash}}) {{authorName}} *{{commitTime}}*
 
   {{/commits}}
@@ -195,13 +219,32 @@ Changelog of Pull Request Notifier for Bitbucket.
     <version>${amps.version}</version>
     <extensions>true</extensions>
     <configuration>
-     <enableFastdev>false</enableFastdev>
+     <instructions>
+      <Atlassian-Plugin-Key>${atlassian.plugin.key}</Atlassian-Plugin-Key>
+      <!-- Add package to export here -->
+      <Export-Package>
+       com.sun.activation.registries
+      </Export-Package>
+      <!-- Add package import here -->
+      <Import-Package>
+       com.sun.*, org.springframework.osgi.*;resolution:="optional", org.eclipse.gemini.blueprint.*;resolution:="optional", *
+      </Import-Package>
+      <!-- Ensure plugin is Spring powered -->
+      <Spring-Context>
+       *
+      </Spring-Context>
+
+      <Atlassian-Scan-Folders>META-INF/plugin-descriptors</Atlassian-Scan-Folders>
+     </instructions>
+     <compressJs>false</compressJs>
+     <compressCss>false</compressCss>
+     <quickReloadVersion>${quick.reload.version}</quickReloadVersion>
      <enableDevToolbox>false</enableDevToolbox>
      <enablePde>false</enablePde>
-     <skipRestDocGeneration>true</skipRestDocGeneration>
-     <skipManifestValidation>true</skipManifestValidation>
-     <extractDependencies>false</extractDependencies>
-     <skipManifestValidation>true</skipManifestValidation>
+     <!--     <skipRestDocGeneration>true</skipRestDocGeneration>-->
+     <!--     <skipManifestValidation>true</skipManifestValidation>-->
+     <!--     <extractDependencies>false</extractDependencies>-->
+     <!--     <skipManifestValidation>true</skipManifestValidation>-->
      <enableQuickReload>true</enableQuickReload>
      <pluginArtifacts>
       <pluginArtifact>
@@ -221,6 +264,28 @@ Changelog of Pull Request Notifier for Bitbucket.
     </configuration>
    </plugin>
    <plugin>
+    <groupId>com.atlassian.plugin</groupId>
+    <artifactId>atlassian-spring-scanner-maven-plugin</artifactId>
+    <version>${atlassian.spring.scanner.version}</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>atlassian-spring-scanner</goal>
+      </goals>
+      <phase>process-classes</phase>
+     </execution>
+    </executions>
+    <configuration>
+     <scannedDependencies>
+      <dependency>
+       <groupId>com.atlassian.plugin</groupId>
+       <artifactId>atlassian-spring-scanner-external-jar</artifactId>
+      </dependency>
+     </scannedDependencies>
+     <verbose>false</verbose>
+    </configuration>
+   </plugin>
+   <plugin>
     <artifactId>maven-compiler-plugin</artifactId>
     <configuration>
      <source>1.8</source>
@@ -230,12 +295,12 @@ Changelog of Pull Request Notifier for Bitbucket.
    <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-release-plugin</artifactId>
-    <version>2.5</version>
+    <version>2.5.3</version>
    </plugin>
    <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
-    <version>2.17</version>
+    <version>2.22.1</version>
     <configuration>
      <includes>
       <include>**/*Test.java</include>
@@ -300,6 +365,67 @@ Changelog of Pull Request Notifier for Bitbucket.
      </execution>
     </executions>
    </plugin>
+   <plugin>
+    <!-- Install front-end modules and run ESLint -->
+    <groupId>com.github.eirslett</groupId>
+    <artifactId>frontend-maven-plugin</artifactId>
+    <version>${frontend.maven.plugin.version}</version>
+    <configuration>
+     <nodeVersion>${nodeVersion}</nodeVersion>
+     <installDirectory>${frontend.maven.plugin.install.directory}</installDirectory>
+     <workingDirectory>${basedir}</workingDirectory>
+    </configuration>
+    <executions>
+     <execution>
+      <id>install-node-and-npm</id>
+      <phase>generate-resources</phase>
+      <goals>
+       <goal>install-node-and-npm</goal>
+      </goals>
+     </execution>
+     <execution>
+      <id>install-prod-dependencies</id>
+      <phase>generate-resources</phase>
+      <goals>
+       <goal>npm</goal>
+      </goals>
+      <configuration>
+       <arguments>${fe.cmd.install}</arguments>
+      </configuration>
+     </execution>
+     <execution>
+      <id>compile-the-ui</id>
+      <phase>process-resources</phase>
+      <goals>
+       <goal>npm</goal>
+      </goals>
+      <configuration>
+       <arguments>run ${fe.cmd.build}</arguments>
+      </configuration>
+     </execution>
+     <!--                    <execution>-->
+     <!--                        <id>lint</id>-->
+     <!--                        <phase>test</phase>-->
+     <!--                        <goals>-->
+     <!--                            <goal>npm</goal>-->
+     <!--                        </goals>-->
+     <!--                        <configuration>-->
+     <!--                            <arguments>run lint</arguments>-->
+     <!--                        </configuration>-->
+     <!--                    </execution>-->
+     <!--                    <execution>-->
+     <!--                        <id>run-tests</id>-->
+     <!--                        <phase>test</phase>-->
+     <!--                        <goals>-->
+     <!--                            <goal>npm</goal>-->
+     <!--                        </goals>-->
+     <!--                        <configuration>-->
+     <!--                            <arguments>run test</arguments>-->
+     <!--                        </configuration>-->
+     <!--                    </execution>-->
+    </executions>
+   </plugin>
+
   </plugins>
   <resources>
    <resource>
@@ -326,15 +452,31 @@ Changelog of Pull Request Notifier for Bitbucket.
     </plugins>
    </build>
   </profile>
+  <profile>
+   <id>watch-mode</id>
+   <properties>
+    <fe.cmd.build>${fe.cmd.build.dev}</fe.cmd.build>
+   </properties>
+  </profile>
  </profiles>
 
  <properties>
   <changelog.version>1.60</changelog.version>
   <fmt.version>2.9</fmt.version>
   <violations.version>1.21</violations.version>
-  <bitbucket.version>6.8.0-bbs-cdn-m1</bitbucket.version>
+  <bitbucket.version>7.6.1</bitbucket.version>
   <bitbucket.data.version>${bitbucket.version}</bitbucket.data.version>
-  <quick.reload.version>2.0.0</quick.reload.version>
-  <amps.version>8.0.2</amps.version>
+  <amps.version>8.1.1</amps.version>
+  <quick.reload.version>3.0.0</quick.reload.version>
+  <atlassian.plugin.key>${project.groupId}.${project.artifactId}</atlassian.plugin.key>
+  <atlassian.spring.scanner.version>2.1.15</atlassian.spring.scanner.version>
+  <spring.version>5.2.6.RELEASE</spring.version>
+  <frontend.maven.plugin.version>1.6</frontend.maven.plugin.version>
+  <frontend.maven.plugin.install.directory>${project.build.directory}</frontend.maven.plugin.install.directory>
+  <nodeVersion>v12.13.0</nodeVersion>
+  <fe.cmd.install>install --no-progress</fe.cmd.install>
+  <fe.cmd.build>build:prod</fe.cmd.build>
+  <fe.cmd.build.dev>build:dev</fe.cmd.build.dev>
+  <frontend.working.directory>src/main/js/pull-request-notifier-for-bitbucket</frontend.working.directory>
  </properties>
 </project>

@@ -3,14 +3,15 @@ package se.bjurr.prnfb.presentation.dto;
 import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class HeaderDTO {
 
-  private String name;
-  private String value;
+  @XmlElement private String name;
+  @XmlElement private String value;
 
   @Override
   public boolean equals(Object obj) {

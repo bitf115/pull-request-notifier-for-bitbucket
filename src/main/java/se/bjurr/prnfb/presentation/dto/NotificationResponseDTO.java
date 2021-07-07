@@ -5,16 +5,17 @@ import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 import java.net.URI;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class NotificationResponseDTO implements Comparable<NotificationResponseDTO> {
-  private final String content;
-  private final UUID notification;
-  private final String notificationName;
-  private final int status;
-  private final URI uri;
+  @XmlElement private final String content;
+  @XmlElement private final UUID notification;
+  @XmlElement private final String notificationName;
+  @XmlElement private final int status;
+  @XmlElement private final URI uri;
 
   public NotificationResponseDTO(
       URI uri, String content, int status, UUID notification, String notificationName) {

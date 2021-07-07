@@ -1,4 +1,4 @@
-<atlassian-plugin key="se.bjurr.prnfs.pull-request-notifier-for-stash" name="${project.name}" plugins-version="2">
+<atlassian-plugin key="${atlassian.plugin.key}" name="${project.name}" plugins-version="2">
  <plugin-info>
   <description>${project.description}</description>
   <version>${project.version}</version>
@@ -9,23 +9,23 @@
   <param name="configure.url">/plugins/servlet/prnfb/admin</param>
  </plugin-info>
 
- <component key="prnfbPullRequestEventListener" class="se.bjurr.prnfb.listener.PrnfbPullRequestEventListener" />
- <component key="buttonsService" class="se.bjurr.prnfb.service.ButtonsService" />
- <component key="userCheckService" class="se.bjurr.prnfb.service.UserCheckService" />
- <component key="settingsService" class="se.bjurr.prnfb.service.SettingsService" />
- <component key="prnfbRendererFactory" class="se.bjurr.prnfb.service.PrnfbRendererFactory" />
+ <!-- <component key="prnfbPullRequestEventListener" class="se.bjurr.prnfb.listener.PrnfbPullRequestEventListener" />-->
+ <!-- <component key="buttonsService" class="se.bjurr.prnfb.service.ButtonsService" />-->
+ <!-- <component key="userCheckService" class="se.bjurr.prnfb.service.UserCheckService" />-->
+ <!-- <component key="settingsService" class="se.bjurr.prnfb.service.SettingsService" />-->
+ <!-- <component key="prnfbRendererFactory" class="se.bjurr.prnfb.service.PrnfbRendererFactory" />-->
 
- <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />
- <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />
- <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" />
- <component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer" />
- <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />
- <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate" />
- <component-import key="repositoryService" interface="com.atlassian.bitbucket.repository.RepositoryService" />
- <component-import key="projectService" interface="com.atlassian.bitbucket.project.ProjectService" />
- <component-import key="executorService" interface="java.util.concurrent.ExecutorService" />
- <component-import key="permissionService" interface="com.atlassian.bitbucket.permission.PermissionService" />
- <component-import key="scmService" interface="com.atlassian.bitbucket.scm.ScmService" />
+ <!-- <component-import key="applicationProperties" interface="com.atlassian.sal.api.ApplicationProperties" />-->
+ <!-- <component-import key="userManager" interface="com.atlassian.sal.api.user.UserManager" />-->
+ <!-- <component-import key="loginUriProvider" interface="com.atlassian.sal.api.auth.LoginUriProvider" />-->
+ <!-- <component-import key="renderer" interface="com.atlassian.templaterenderer.velocity.one.six.VelocityTemplateRenderer" />-->
+ <!-- <component-import key="pluginSettingsFactory" interface="com.atlassian.sal.api.pluginsettings.PluginSettingsFactory" />-->
+ <!-- <component-import key="transactionTemplate" interface="com.atlassian.sal.api.transaction.TransactionTemplate" />-->
+ <!-- <component-import key="repositoryService" interface="com.atlassian.bitbucket.repository.RepositoryService" />-->
+ <!-- <component-import key="projectService" interface="com.atlassian.bitbucket.project.ProjectService" />-->
+ <!-- <component-import key="executorService" interface="java.util.concurrent.ExecutorService" />-->
+ <!-- <component-import key="permissionService" interface="com.atlassian.bitbucket.permission.PermissionService" />-->
+ <!-- <component-import key="scmService" interface="com.atlassian.bitbucket.scm.ScmService" />-->
 
  <rest key="rest" path="/prnfb-admin" version="1.0">
   <description>Provides REST resources for the admin UI.</description>
@@ -59,7 +59,7 @@
  </web-item>
 
  <client-web-item key="se.bjurr.prnfb.triggerbutton" name="Trigger Notification" weight="50" section="bitbucket.pullrequest.action">
-  <dependency>${project.groupId}-${project.artifactId}:pr-triggerbutton</dependency>
+  <dependency>${atlassian.plugin.key}:pr-triggerbutton</dependency>
   <label key="bitbucket.web.pull-request.toolbar.triggerbutton">pr-triggerbutton</label>
  </client-web-item>
 

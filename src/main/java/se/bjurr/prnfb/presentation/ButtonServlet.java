@@ -121,8 +121,8 @@ public class ButtonServlet {
       @PathParam("projectKey") String projectKey,
       @PathParam("repositorySlug") String repositorySlug) {
     final List<PrnfbButton> buttons = settingsService.getButtons(projectKey, repositorySlug);
-    final Iterable<PrnfbButton> allowedButtons = userCheckService.filterAdminAllowed(buttons);
-    final List<ButtonDTO> dtos = toButtonDtoList(allowedButtons);
+    //    final Iterable<PrnfbButton> allowedButtons = userCheckService.filterAdminAllowed(buttons);
+    final List<ButtonDTO> dtos = toButtonDtoList(buttons);
     Collections.sort(dtos);
     return ok(dtos, APPLICATION_JSON).build();
   }

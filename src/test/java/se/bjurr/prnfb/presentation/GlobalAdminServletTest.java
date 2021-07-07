@@ -12,6 +12,7 @@ import com.atlassian.bitbucket.repository.RepositoryService;
 import com.atlassian.sal.api.auth.LoginUriProvider;
 import com.atlassian.sal.api.user.UserManager;
 import com.atlassian.templaterenderer.TemplateRenderer;
+import com.atlassian.webresource.api.assembler.PageBuilderService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ public class GlobalAdminServletTest {
   @Mock private UserCheckService userCheckService;
   @Mock private UserManager userManager;
   @Mock private ProjectService projectService;
+  @Mock private PageBuilderService pageBuilderService;
 
   @Before
   public void before() {
@@ -36,6 +38,7 @@ public class GlobalAdminServletTest {
             this.loginUriProvider,
             this.renderer,
             this.repositoryService,
+            this.pageBuilderService,
             this.userCheckService,
             this.projectService);
   }

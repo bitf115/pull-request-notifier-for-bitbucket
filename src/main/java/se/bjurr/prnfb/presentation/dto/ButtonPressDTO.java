@@ -4,13 +4,14 @@ import static javax.xml.bind.annotation.XmlAccessType.FIELD;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @XmlAccessorType(FIELD)
 public class ButtonPressDTO {
-  private final ON_OR_OFF confirmation;
-  private final List<NotificationResponseDTO> notificationResponses;
+  @XmlElement private final ON_OR_OFF confirmation;
+  @XmlElement private final List<NotificationResponseDTO> notificationResponses;
 
   public ButtonPressDTO(
       ON_OR_OFF confirmation, List<NotificationResponseDTO> notificationResponses) {

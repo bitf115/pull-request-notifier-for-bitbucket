@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import se.bjurr.prnfb.settings.Restricted;
 import se.bjurr.prnfb.settings.USER_LEVEL;
@@ -25,16 +26,16 @@ public class ButtonDTO implements Comparable<ButtonDTO>, Restricted {
    * {@link #buttonFormList} is not defined and {@link #buttonFormListString} is defined, then that
    * is parsed to {@link #buttonFormList}.
    */
-  private String buttonFormListString;
+  @XmlElement private String buttonFormListString;
 
-  private ON_OR_OFF confirmation;
-  private String name;
-  private String projectKey;
-  private String repositorySlug;
-  private USER_LEVEL userLevel;
-  private UUID uuid;
-  private String confirmationText;
-  private String redirectUrl;
+  @XmlElement private ON_OR_OFF confirmation;
+  @XmlElement private String name;
+  @XmlElement private String projectKey;
+  @XmlElement private String repositorySlug;
+  @XmlElement private USER_LEVEL userLevel;
+  @XmlElement private UUID uuid;
+  @XmlElement private String confirmationText;
+  @XmlElement private String redirectUrl;
 
   public void setConfirmationText(String confirmationText) {
     this.confirmationText = confirmationText;

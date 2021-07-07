@@ -9,9 +9,12 @@ import static se.bjurr.prnfb.listener.PrnfbPullRequestAction.BUTTON_TRIGGER;
 import com.atlassian.bitbucket.pull.PullRequest;
 import com.atlassian.bitbucket.pull.PullRequestService;
 import com.atlassian.bitbucket.repository.Repository;
+import com.atlassian.plugin.spring.scanner.annotation.component.BitbucketComponent;
+import com.atlassian.plugin.spring.scanner.annotation.imports.ComponentImport;
 import com.google.common.annotations.VisibleForTesting;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 import se.bjurr.prnfb.http.ClientKeyStore;
 import se.bjurr.prnfb.http.NotificationResponse;
 import se.bjurr.prnfb.listener.PrnfbPullRequestAction;
@@ -21,6 +24,7 @@ import se.bjurr.prnfb.settings.PrnfbButton;
 import se.bjurr.prnfb.settings.PrnfbNotification;
 import se.bjurr.prnfb.settings.PrnfbSettingsData;
 
+@BitbucketComponent
 public class ButtonsService {
 
   private final PrnfbPullRequestEventListener prnfbPullRequestEventListener;
@@ -29,8 +33,9 @@ public class ButtonsService {
   private final SettingsService settingsService;
   private final UserCheckService userCheckService;
 
+  @Autowired
   public ButtonsService(
-      PullRequestService pullRequestService,
+      @ComponentImport final PullRequestService pullRequestService,
       PrnfbPullRequestEventListener prnfbPullRequestEventListener,
       PrnfbRendererFactory prnfbRendererFactory,
       SettingsService settingsService,
@@ -141,12 +146,8 @@ public class ButtonsService {
             .setButton(button) //
             .build();
 
-    PrnfbPullRequestAction pullRequestAction = BUTTON_TRIGGER;
-
-    PrnfbRendererWrapper renderer =
-        prnfbRendererFactory.create(
-            pullRequest, pullRequestAction, variables, clientKeyStore, shouldAcceptAnyCertificate);
-    return renderer;
+    return prnfbRendererFactory.create(
+        pullRequest, BUTTON_TRIGGER, variables, clientKeyStore, shouldAcceptAnyCertificate);
   }
 
   public List<NotificationResponse> handlePressed(
@@ -186,10 +187,8 @@ public class ButtonsService {
    * Checks if the given button is visible on the pull request by either the from or to repository.
    */
   private boolean isVisibleOnPullRequest(PrnfbButton button, PullRequest pullRequest) {
-    return pullRequest.getFromRef() != null
-            && isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
-        || pullRequest.getToRef() != null
-            && isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
+    return isVisibleOnRepository(button, pullRequest.getFromRef().getRepository())
+        || isVisibleOnRepository(button, pullRequest.getToRef().getRepository());
   }
 
   /**
